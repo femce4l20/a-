@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Audio Distortion Tool</title>
+  <style>
+    label { display: block; margin-top: 10px; }
+    .slider-group { margin-bottom: 10px; }
+    .slider-label { display: inline-block; width: 180px; }
+    .slider-value { display: inline-block; width: 40px; }
+  </style>
+</head>
+<body>
+  <h1>Audio Distortion & Moderation Tool</h1>
+  <input type="file" id="audioFile" accept="audio/*"><br><br>
+
+  <form id="audioControls">
+    <label>Distortion Type:
+      <select id="distType">
+        <option value="none">None</option>
+        <option value="soft">Soft Clipping</option>
+        <option value="hard">Hard Clipping</option>
+        <option value="bitcrush">Bitcrusher</option>
+      </select>
+    </label>
+    <div class="slider-group">
+      <span class="slider-label">Distortion Amount:</span>
+      <input id="distAmount" type="range" min="0" max="1000" value="400">
+      <span id="distAmountVal" class="slider-value">400</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Bit Depth:</span>
+      <input id="bitDepth" type="range" min="8" max="32" value="16" step="8">
+      <span id="bitDepthVal" class="slider-value">16</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Highpass Freq (Hz):</span>
+      <input id="hpFreq" type="range" min="20" max="2000" value="100">
+      <span id="hpFreqVal" class="slider-value">100</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Lowpass Freq (Hz):</span>
+      <input id="lpFreq" type="range" min="100" max="20000" value="10000">
+      <span id="lpFreqVal" class="slider-value">10000</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Lowpass Q:</span>
+      <input id="lpQ" type="range" min="0.1" max="20" value="1" step="0.1">
+      <span id="lpQVal" class="slider-value">1.0</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Notch1 Freq (Hz):</span>
+      <input id="notch1Freq" type="range" min="100" max="8000" value="500">
+      <span id="notch1FreqVal" class="slider-value">500</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Notch1 Q:</span>
+      <input id="notch1Q" type="range" min="0.1" max="20" value="1" step="0.1">
+      <span id="notch1QVal" class="slider-value">1.0</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Notch2 Freq (Hz):</span>
+      <input id="notch2Freq" type="range" min="100" max="8000" value="2000">
+      <span id="notch2FreqVal" class="slider-value">2000</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Notch2 Q:</span>
+      <input id="notch2Q" type="range" min="0.1" max="20" value="1" step="0.1">
+      <span id="notch2QVal" class="slider-value">1.0</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Mid Gain:</span>
+      <input id="midGain" type="range" min="0" max="2" value="1" step="0.01">
+      <span id="midGainVal" class="slider-value">1.00</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Side Gain:</span>
+      <input id="sideGain" type="range" min="0" max="2" value="1" step="0.01">
+      <span id="sideGainVal" class="slider-value">1.00</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Mid EQ Freq (Hz):</span>
+      <input id="midEqFreq" type="range" min="100" max="8000" value="1000">
+      <span id="midEqFreqVal" class="slider-value">1000</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Mid EQ Gain (dB):</span>
+      <input id="midEqGain" type="range" min="-24" max="24" value="0">
+      <span id="midEqGainVal" class="slider-value">0</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Side EQ Freq (Hz):</span>
+      <input id="sideEqFreq" type="range" min="100" max="8000" value="1000">
+      <span id="sideEqFreqVal" class="slider-value">1000</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Side EQ Gain (dB):</span>
+      <input id="sideEqGain" type="range" min="-24" max="24" value="0">
+      <span id="sideEqGainVal" class="slider-value">0</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Formant1 Freq (Hz):</span>
+      <input id="formant1Freq" type="range" min="200" max="4000" value="800">
+      <span id="formant1FreqVal" class="slider-value">800</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Formant1 Q:</span>
+      <input id="formant1Q" type="range" min="0.1" max="20" value="1" step="0.1">
+      <span id="formant1QVal" class="slider-value">1.0</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Formant1 Gain (dB):</span>
+      <input id="formant1Gain" type="range" min="-24" max="24" value="0">
+      <span id="formant1GainVal" class="slider-value">0</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Formant2 Freq (Hz):</span>
+      <input id="formant2Freq" type="range" min="200" max="4000" value="1600">
+      <span id="formant2FreqVal" class="slider-value">1600</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Formant2 Q:</span>
+      <input id="formant2Q" type="range" min="0.1" max="20" value="1" step="0.1">
+      <span id="formant2QVal" class="slider-value">1.0</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Formant2 Gain (dB):</span>
+      <input id="formant2Gain" type="range" min="-24" max="24" value="0">
+      <span id="formant2GainVal" class="slider-value">0</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Comp Threshold (dB):</span>
+      <input id="compThreshold" type="range" min="-60" max="0" value="-24">
+      <span id="compThresholdVal" class="slider-value">-24</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Comp Ratio:</span>
+      <input id="compRatio" type="range" min="1" max="20" value="4">
+      <span id="compRatioVal" class="slider-value">4</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Comp Attack (s):</span>
+      <input id="compAttack" type="range" min="0.001" max="1" value="0.003" step="0.001">
+      <span id="compAttackVal" class="slider-value">0.003</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Comp Release (s):</span>
+      <input id="compRelease" type="range" min="0.01" max="1" value="0.25" step="0.01">
+      <span id="compReleaseVal" class="slider-value">0.25</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Bass Gain (dB):</span>
+      <input id="bassGain" type="range" min="-24" max="24" value="0">
+      <span id="bassGainVal" class="slider-value">0</span>
+    </div>
+    <div class="slider-group">
+      <span class="slider-label">Treble Gain (dB):</span>
+      <input id="trebleGain" type="range" min="-24" max="24" value="0">
+      <span id="trebleGainVal" class="slider-value">0</span>
+    </div>
+  </form>
+  <button id="process">Process Audio</button>
+  <br><br>
+  <audio id="player" controls></audio>
+  <div id="fileSize"></div>
+  <div id="recommendation"></div>
+  <hr>
+  <input id="presetName" placeholder="Preset name">
+  <button id="savePreset">Save Preset</button>
+  <select id="presetList"></select>
+  <button id="loadPreset">Load Preset</button>
+  <button id="deletePreset">Delete Preset</button>
+  <script type="module" src="src/index.js"></script>
+</body>
+</html>
